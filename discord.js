@@ -1,4 +1,4 @@
-﻿const Discord = require('discord.js');
+﻿﻿const Discord = require('discord.js');
 var fs = require('fs');
 var express = require('express');
 
@@ -83,10 +83,11 @@ var datelog = new Date();
         //break;
     }*/
 
-	if (message.content.startsWith("!combat")) {//debut raid
-	
-	
+	if (message.content.startsWith("!raid") || message.content.startsWith("!Raid") || message.content.startsWith("! raid") || message.content.startsWith("! Raid")) {//debut raid
+
+
 		var args = message.content.substr(6);
+		
 		if(args.length === 0){
         message.channel.send("", {embed: {
           title: "Erreur:",
@@ -97,10 +98,12 @@ var datelog = new Date();
           }
         }});
 		}
+		
 		else {
 			var compomsg = message.content.substring(PREFIX.length).split(' ');
 			var longueur = compomsg.length;
 			var nompoke = compomsg[1];
+      nompoke = nompoke.charAt(0).toUpperCase() + nompoke.substring(1).toLowerCase();
 			var arene = "";
 			for (i=2; i<longueur-1 ; i++) {
 			var arene = arene + compomsg[i] + " ";	}
@@ -124,18 +127,28 @@ var datelog = new Date();
 			}
 
 			var lien = " ";
-
-			if (nompoke === 'registeel' || nompoke === 'Registeel') { lien = "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/pokemon_icons/pokemon_icon_379_00.png"; };
-
-			if (nompoke === 'help') { message.channel.send("Pour proposer un raid : !raid <nom du pokemon> <nom de l'arene> <horaire propose>\nEx : !raid Mewtwo Jupiter 8h30"); lien = "1";};
+      var jsonfile = require('/home/el_info1/Bureau/test/num.json');
+      var numpoke = 0;
+      if(jsonfile.hasOwnProperty(nompoke)){
+        numpoke = jsonfile[nompoke]
+      }
+			lien = "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/pokemon_icons/pokemon_icon_" + numpoke + "_00.png";
+      if (numpoke < 100){lien = lien = "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/pokemon_icons/pokemon_icon_0" + numpoke + "_00.png";
+      
+      }
+      if (nompoke === "1" || nompoke === "2"){lien = "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/ic_raid_egg_normal.png"}
+      if (nompoke === "3" || nompoke === "4"){lien = "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/ic_raid_egg_rare.png"}
+	  if (nompoke === "5"){lien = "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/ic_raid_egg_legendary.png"}
+      if (nompoke === 'help') { message.channel.send("Pour proposer un raid : !raid <nom du pokemon> <nom de l'arene> <horaire propose>\nEx : !raid Mewtwo Jupiter 8h30"); lien = "1";};
+      
 			if (lien === ' ') { message.channel.send("Erreur, vérifie le nom de ton pokemon");}
 	  //else message.channel.send("Merci de verifier le nom du pokemon indique" ) break;
-			else { message.channel.send("@everyone", {embed: {
-				title: "Demande de raid :",
+			else { 
+				message.channel.send( {embed: {
+				title : message.author.username + " a demandé :",
 				color: 0x1394e3,
-				description: "Souhaitez vous faire le raid " + compomsg[1] + "\nà l'arène "+ arene + "à " + horaire + " :question:\n:regional_indicator_y: : OUI ou :regional_indicator_n: : NON",
+				description: "Souhaitez-vous faire le raid " + compomsg[1] + "\nà l'arène "+ arene + "à " + horaire + " ?\n:regional_indicator_y: : OUI ou :regional_indicator_n: : NON",
 				thumbnail: {
-					//url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIzZbvI-UTD4M-mDnUuld-MMLNU_j420uu84pZxVxpDnbIqxMwuw"},
 					url: lien
 				},
 				footer: {
@@ -151,13 +164,12 @@ var datelog = new Date();
 				lien = "";
             }).catch(console.error);
 			}
-
 		}
 	}//fin raid
 
 	if (message.content.startsWith("!couleur")) {//debut couleur
-	
-	
+
+
 		var args = message.content.substr(9);
 		if(args.length === 0){
 			message.channel.send("Merci d'indiquer ta couleur");
@@ -185,8 +197,8 @@ var datelog = new Date();
 	}//fin couleur
 
 	if (message.content.startsWith("!stat")) {//début stat
-	
-	
+
+
 		var args = message.content.substr(6);
 		var nompoke1 = message.content.substring(PREFIX.length).split(' ');
 		var nompoke = nompoke1[1];
@@ -213,18 +225,18 @@ var datelog = new Date();
 		}}).catch(console.error);
 	}//fin stat
 
-	/*if (message.content.startsWith("!news") || message.content.startsWith("!newz") || message.content.startsWith("!new")) {//début news
-	
-	
+	if (message.content.startsWith("!news") || message.content.startsWith("!newz") || message.content.startsWith("!new")) {//début news
+
+
 		message.channel.send("", {embed: {
 			title: "Les événements en cours / à venir sont :",
 			color: 0x1394e3,
-			description: "**__Du  01/09 au 02/09 :__**\n- Challenge Numéro 3 : Décrochez les bonus de poussière d'étoile en réalisant des quêtes de terrain.\n- Spawn grandement augmenté de Goélise avec la possibilité de l'obtenir en shiny.\n**__Community Day le 22/09 de 11h à 14h__**\nGermignon + Triple XP à la capture\n**__Boss T5 du 17/08 au 20/09 :__**\n- Regirock\n**__Récompense 7ème tampon du mois de septembre__** :\nEntei :",
+			description: "**__Community Day le 22/09 de 11h à 14h__**\n- Germignon + Triple XP à la capture\n**__Boss T5 du 17/08 au 20/09 :__**\n- Regirock\n**__Récompense 7ème tampon du mois de septembre__** :\n- Entei.\n**__Du 13/09 au 20/09:__**\n- Elekthor, Artikodin et Sulfura en raid 5 (dispo shiny)\n**__Du 13/09 au 30/09__**\n- MrMime, Canarticho, Kangourex et Tauros dispo en oeuf 7Kms + Spawn augmenté de pokémon de la région de Kento.\n__**Du 20/09 au 23/10**__\n- Mewtwo en raid 5 (pas de shiny annoncé)",
 			thumbnail: {
-				url: "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/pokemon_icons/pokemon_icon_278_00_shiny.png"
+				url: "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/pokemon_icons/pokemon_icon_150_00.png"
 			},
 			image: {
-				url: "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/pokemon_icons/pokemon_icon_244_00.png"
+				url: "https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/pokemon_icons/pokemon_icon_128_00.png"
 			},
 			footer: {
 				text: "Discord bot by Mr1Dridri#4991"
@@ -234,7 +246,7 @@ var datelog = new Date();
 
 
 	if (message.content.startsWith("!arene") || message.content.startsWith("!arène")) {//début arene
-	
+
 //var args = message.content.substr(6);
 		var args = message.content.substring(PREFIX.length).split(' ');
 		var test = message.content.substr(7);
@@ -258,7 +270,7 @@ var datelog = new Date();
 			}
 			}});
 		}
-		else{*/
+		else{
 		/*cadran solaire
 		chapelle chapeau
 		road to mexico
@@ -293,7 +305,7 @@ var datelog = new Date();
 		*/
 
 
-			/*var erreurs = 0;
+			var erreurs = 0;
 			var nbarenecholet = 34;
 			if (nomarene === "solaire" || nomarene === "cadran"){lat = 47.059029;longu = -0.882278;imgarene = "https://lh5.ggpht.com/SE7dOsY_3p0N2pecv7b2g2wln8V2LvzL7Cday-nPv_6E4catRgx8t7KGKhplkoAGbHD0qCKooGVyE9rTW1bP", nomdef = "Cadran Solaire"} else(erreurs = erreurs +1);
 			if (nomarene === "chapeau" || nomarene === "chapelle" && nomarene2 === "chapeau" ) {lat = 47.066117; longu = -0.864714;imgarene = "https://lh4.ggpht.com/Yzm5CdOXwPN3OBgwDMP7Czrs2yt2hzEXqgBlsScuxxdHjyDEJHbloH-YAZYD0Ss-bXhBDffne5iXoltIROV7"; nomdef = "Chapelle Chapeau"} else(erreurs = erreurs +1);
@@ -354,8 +366,8 @@ var datelog = new Date();
 
 
 	if (message.content.startsWith("!help") || message.content.startsWith("!aide") || message.content.startsWith("!aides")) {//début help
-	
-	
+
+
 		message.channel.send("", {embed: {
 			title: "La liste des commandes en place :",
 			color: 0x1394e3,
@@ -369,7 +381,7 @@ var datelog = new Date();
 		}}).catch(console.error);
 	}//fin help
 
-*/
+
 	/*	if (message.content.startsWith("!listeraids") || message.content.startsWith("!listeraid") ) {//début raidsliste
 		message.channel.send("", {embed: {
 			title: "La liste des Raids sont :",
@@ -384,19 +396,13 @@ var datelog = new Date();
 */
 
   if (message.content.startsWith("!bossraid") || message.content.startsWith("!raidboss") ) {//début raidsliste
-	
-	
+
+
     var args = message.content.substr(10);
     const https = require('https');
 
     https.get('https://gamepress.gg//sites//default//files//aggregatedjson//raid-boss-list-PoGO.json?1449952405732167729', (resp) => {
       let data = '';
-
-      // A chunk of data has been recieved.
-      // A chunk of data has been recieved.
-      // A chunk of data has been recieved.
-      // A chunk of data has been recieved.
-      // A chunk of data has been recieved.
       resp.on('data', (chunk) => {
         data += chunk;
       });
@@ -420,7 +426,7 @@ var datelog = new Date();
               pokemon = pokemon + titre[i];
             }
             //Systeme de traduction
-            var jsonfile = require('C:/Users/adrien/Desktop/fork dridri/botdiscord/names.json');
+            var jsonfile = require('./names.json');
             if(jsonfile.hasOwnProperty(pokemon)){
               pokemon = jsonfile[pokemon]
             }
@@ -437,18 +443,13 @@ var datelog = new Date();
             var type =  listpoke[item].type;
             var type1 = "";
             var type2 = "";
-            //console.log("start");
             var longueur = listpoke[item].type.length;
-            //console.log(longueur)
             //while ((type[i] !== ",") || (i < longueur) ) {
             while (i < longueur && type[i] !== ",") {
               type1 = type1 + type[i];
               i = i+1;
-              //console.log(i);
-              //console.log("ok");
             };
             //i = i+1;
-            //console.log(type1);
             if (type[i]=","){
               i=i+2;
               while (i < longueur) {
@@ -456,16 +457,14 @@ var datelog = new Date();
                 i = i+1;
               };
             }
-            //console.log(type2);
             //traduction des types
-            var jsonfile = require('C:/Users/adrien/Desktop/fork dridri/botdiscord/types.json');
+            var jsonfile = require('./types.json');
             if(jsonfile.hasOwnProperty(type1)){
               type1 = jsonfile[type1]
             }
             if(jsonfile.hasOwnProperty(type2)){
               type2 = jsonfile[type2]
             }
-
             var cpraid = listpoke[item].cp;
             //ajout niveau
             var i = 0;
@@ -475,7 +474,6 @@ var datelog = new Date();
             while (niveau[i] !== ">") {
               i=i+1
             }
-
             i=i+1;
             niveau = niveau[i];
             if (args ===""){
@@ -484,7 +482,6 @@ var datelog = new Date();
             }else {listecomplete = listecomplete + "\n**__Raid " + niveau + "__** :star: :\n" + ":small_orange_diamond: __" + pokemon + "__ : " + cpmax + "  | "+ cpmaxboost +"  | "+ type1 + " " + type2 + "\n";}
             ancienniveau = niveau;
           }
-
           if (args ==="1"){
             if (niveau === "1"){
             if (niveau === ancienniveau) {
@@ -493,7 +490,6 @@ var datelog = new Date();
               listecomplete = listecomplete + "\n**__Raid " + niveau + "__** :star: :\n" + ":small_orange_diamond: __" + pokemon + "__ : " + cpmax + "  | "+ cpmaxboost +"  | "+ type1 + " " + type2 + "\n";
             }
             ancienniveau = "1";
-            //console.log(listecomplete);
             }
           }//fin raid 1
 
@@ -506,7 +502,6 @@ var datelog = new Date();
                       listecomplete = listecomplete + "\n**__Raid " + niveau + "__** :star: :\n" + ":small_orange_diamond: __" + pokemon + "__ : " + cpmax + "  | "+ cpmaxboost +"  | "+ type1 + " " + type2 + "\n";
                     }
                     ancienniveau = "2";
-                    //console.log(listecomplete);
                     }
           }//fin raid 2
 
@@ -531,7 +526,6 @@ var datelog = new Date();
                       listecomplete = listecomplete + "\n**__Raid " + niveau + "__** :star: :\n" + ":small_orange_diamond: __" + pokemon + "__ : " + cpmax + "  | "+ cpmaxboost +"  | "+ type1 + " " + type2 + "\n";
                     }
                     ancienniveau = "4";
-                    //console.log(listecomplete);
                     }
 
           }//fin raid 4
@@ -545,11 +539,8 @@ var datelog = new Date();
                       listecomplete = listecomplete + "\n**__Raid " + niveau + "__** :star: :\n" + ":small_orange_diamond: __" + pokemon + "__ : " + cpmax + "  | "+ cpmaxboost +"  | "+ type1 + " " + type2 + "\n";
                     }
                     ancienniveau = "5";
-                    //console.log(listecomplete);
                     }
                   }
-
-
 
         }
         }
@@ -568,7 +559,6 @@ var datelog = new Date();
 			for (i = 0; i < 2046; i++) {
 				listecomplete1 = listecomplete1 + listecomplete[i];
 			}
-			console.log("listecomplete1 chargée");
 			message.channel.send("", {embed: {
           title: "La liste des Raids sont : (Iv100 & Iv100 boost météo)",
           color: 0x1394e3,
@@ -577,13 +567,10 @@ var datelog = new Date();
             text: "Discord bot by Mr1Dridri#4991"
           }
         }}).catch(console.error);
-		console.log(listecomplete1);
-		console.log("listecomplete1 envoyée");
-					var listecomplete2 = "";
+			var listecomplete2 = "";
 			for (i = 2046; i < listecomplete.length; i++) {
 				listecomplete2 = listecomplete2 + listecomplete[i];
 			}
-			console.log("listecomplete2 chargée");
 			message.channel.send("", {embed: {
           title: "",
           color: 0x1394e3,
@@ -592,7 +579,6 @@ var datelog = new Date();
             text: "Discord bot by Mr1Dridri#4991"
           }
         }}).catch(console.error);
-		console.log("listecomplete2 envoyée");
 		}
       });
 
@@ -603,8 +589,8 @@ message.delete();
 }//fin testlisteraid
 
 if (message.content.startsWith("!maintenance")) {//début maintenance
-	
-	
+
+
 message.channel.send("", {embed: {
   title: ":warning: Maintenance :warning:",
   color: 0x1394e3,
@@ -616,8 +602,8 @@ message.channel.send("", {embed: {
 }//fin maintenance
 
 if (message.content.startsWith("!update")) {//début maintenance
-	
-	
+
+
 message.channel.send("", {embed: {
   title: ":gear: Mise à jour :gear:",
   color: 0x1394e3,
@@ -629,15 +615,15 @@ message.channel.send("", {embed: {
 }//fin maintenance
 
 if (message.content.startsWith("!stopbotdridri")) {//début stopbot
-	
-	
+
+
 message.channel.send("Arret du serveur en cours ...Serveur Arrêté.A bientot");
 process.exit(-1);
 }//fin stopbot
 
 if (message.content.startsWith("!spinda") || message.content.startsWith("!Spinda")) {//début spinda
-	
-	
+
+
   message.channel.send("", {embed: {
     title: "Spinda :",
     color: 0x1394e3,
@@ -653,8 +639,8 @@ if (message.content.startsWith("!spinda") || message.content.startsWith("!Spinda
 
 
 if (message.content.startsWith("!quete") || message.content.startsWith("!recherche") || message.content.startsWith("!quête")) {//debut quête
-	
-	
+
+
   var args = message.content.substring(PREFIX.length).split(',');
   var mots = message.content.substring(PREFIX.length).split(' ');
   var test = message.content.substr(7);
@@ -675,16 +661,16 @@ message.delete();
 }//fin quête
 
   if (message.content === 'what is my avatar') {
-	
-	
+
+
     // Send the user's avatar URL
     message.reply(message.author.avatarURL);
   }
 
   if (message.content === 'datejour') {
     // Send the user's avatar URL
-	
-	
+
+
     message.reply(datelog.toString());
   }
 
@@ -702,11 +688,11 @@ message.delete();
       }
     }}).catch(console.error);
   }
-  
+
 	//Systeme de Log
 	if(message.content.startsWith("!")){
-	bot.channels.get('').send("\n============================================\nMessage envoyé par " + message.author.username + " le " + datelog.toString() + "\nContenu : \n" + message.content);
-	console.log("\n============================================\nMessage envoyé par " + message.author.username + " le " + datelog.toString() + "\nContenu : \n" + message.content );
+	bot.channels.get('').send("\n============================================\nMessage envoyé par " + message.author.username + " à " + message.guild + " le " + datelog.toString() + "\nContenu : \n" + message.content);
+	console.log("\n============================================\nMessage envoyé par " + message.author.username + " à " + message.guild + " le " + datelog.toString() + "\nContenu : \n" + message.content );
 	}
 })
 bot.login(TOKEN);
